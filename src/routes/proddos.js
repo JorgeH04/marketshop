@@ -8,7 +8,7 @@ const router = express.Router();
 // Models
 const Proddos = require('../models/proddos');
 const Cart = require('../models/cart');
-//const Order = require('../models/Order');
+const Order = require('../models/order');
 
 // Helpers
 const { isAuthenticated } = require('../helpers/auth');
@@ -16,42 +16,64 @@ const { isAuthenticated } = require('../helpers/auth');
 
 
 
-router.get('/proddosindex', async (req, res) => {
-    const proddos = await Proddos.find();
-    res.render('proddos/proddos', { proddos });
-  });
+//router.get('/proddosindex', async (req, res) => {
+//    const proddos = await Proddos.find();
+//    res.render('proddos/proddos', { proddos });
+//  });
 
-
-
-
-
-router.post('/proddos/new-proddos',  async (req, res) => {
-  const { imagePath, product, color, talle, colorstock, tallestock, price } = req.body;
-  const errors = [];
-  if (!imagePath) {
-    errors.push({text: 'Please Write a Title.'});
-  }
-  if (!product) {
-    errors.push({text: 'Please Write a Description'});
-  }
-  if (!price) {
-    errors.push({text: 'Please Write a Description'});
-  }
-  if (errors.length > 0) {
-    res.render('notes/new-note', {
-      errors,
-      imagePath,
-      product,
-      price
+  router.get('/proddosindex/:page', async (req, res) => {
+    let perPage = 8;
+    let page = req.params.page || 1;
+  
+    Proddos
+    .find({}) // finding all documents
+    .sort({ timestamp: -1 })
+    .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+    .limit(perPage) // output just 9 items
+    .exec((err, proddos) => {
+      Proddos.countDocuments((err, count) => { // count to calculate the number of pages
+        if (err) return next(err);
+        res.render('proddos/proddos', {
+          proddos,
+          current: page,
+          pages: Math.ceil(count / perPage)
+        });
+      });
     });
-  } else {
-    const newNote = new Proddos({ imagePath, product, color, talle, colorstock, tallestock, price });
-    //newNote.user = req.user.id;
-    await newNote.save();
-    req.flash('success_msg', 'Note Added Successfully');
-    res.redirect('/proddos/add');
-  }
-});
+  });
+  
+  
+
+
+
+  router.post('/proddos/new-proddos',  async (req, res) => {
+    const { name, title, image, imagedos, imagetres, description, price } = req.body;
+    const errors = [];
+    if (!image) {
+      errors.push({text: 'Please Write a Title.'});
+    }
+    if (!title) {
+      errors.push({text: 'Please Write a Description'});
+    }
+    if (!price) {
+      errors.push({text: 'Please Write a Description'});
+    }
+    if (errors.length > 0) {
+      res.render('notes/new-note', {
+        errors,
+        image,
+        title,
+        price
+      });
+    } else {
+      const newNote = new Proddos({ name, title, image, imagedos, imagetres, description, price });
+      //newNote.user = req.user.id;
+      await newNote.save();
+      req.flash('success_msg', 'Note Added Successfully');
+      res.redirect('/proddosback/:1');
+    }
+  });
+  
 
 
 
@@ -66,6 +88,27 @@ router.get('/proddosredirect/:id', async (req, res) => {
 
 
 
+
+router.get('/proddosindex/:page', async (req, res) => {
+  let perPage = 8;
+  let page = req.params.page || 1;
+
+  Proddos
+  .find({}) // finding all documents
+  .sort({ timestamp: -1 })
+  .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+  .limit(perPage) // output just 9 items
+  .exec((err, proddos) => {
+    Proddos.countDocuments((err, count) => { // count to calculate the number of pages
+      if (err) return next(err);
+      res.render('proddos/new-proddos', {
+        proddos,
+        current: page,
+        pages: Math.ceil(count / perPage)
+      });
+    });
+  });
+});
 
 
 
@@ -148,79 +191,5 @@ router.get('/addtocardproddos/:id', function(req, res, next){
   });
 });
 
-router.get('/reduce/:id', function(req, res, next){
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-
-  cart.reduceByOne(productId);
-  req.session.cart = cart;
-  res.redirect('/shopcart');
-});
-
-router.get('/remove/:id', function(req, res, next){
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-
-  cart.removeItem(productId);
-  req.session.cart = cart;
-  res.redirect('/shopcart');
-});
-
-
-router.get('/shopcart', function (req, res, next){
-  if(!req.session.cart){
-    return res.render('/', {products:null})
-  }
-  var cart = new Cart(req.session.cart);
-  res.render('cart/shopcart', {products: cart.generateArray(), totalPrice: cart.totalPrice})
-});
-
-
-router.post('/checkoutstripe', async (req, res) => {
-
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-
-  const customer = await stripe.customers.create({
-    email: req.body.stripeEmail,
-    source: req.body.stripeToken
-    });
-  const charge = await stripe.charges.create({
-    amount: cart.totalPrice * 100,
-    description: 'Video Editing Software',
-    currency: 'usd',
-    customer: customer.id
-     });
-// Save this charge in your database
-console.log(charge.id);
-// Finally Show a Success View
-res.render('checkout');
-});
-
-router.get('/checkout',isAuthenticated, function (req, res, next){
-  
-  var cart = new Cart(req.session.cart);
-  res.render('cart/checkout', {total: cart.totalPrice})
-});
-
-
-router.post('/checkout', isAuthenticated, async (req, res, next)=>{
-  if(!req.session.cart){
-    return res.render('/', {products:null})
-  }
-  const cart = new Cart(req.session.cart);
-
-  const order = new Order({
-    user: req.user,
-    cart: cart,
-    address: req.body.address,
-    name: req.body.name
-
-  });
-  await order.save();
-  req.flash('success_msg', 'Note Added Successfully');
-  res.redirect('/shopcart');
-  
-})
 
 module.exports = router;

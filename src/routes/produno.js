@@ -6,7 +6,7 @@ const mercadopago = require("mercadopago");
 // Models
 const Produno = require('../models/produno');
 const Cart = require('../models/cart');
-//const Order = require('../models/Order');
+const Order = require('../models/order');
 
 // Helpers
 const { isAuthenticated } = require('../helpers/auth');
@@ -15,21 +15,19 @@ const { isAuthenticated } = require('../helpers/auth');
 
 
 
-router.get('/produnoindex', async (req, res) => {
-  const produno = await Produno.find();
-  res.render('produno/produno', { produno });
-});
 
 
 
+
+////////////////////////////////////////back/////////////////////////////////////////////////////7
 
 router.post('/produno/new-produno',  async (req, res) => {
-  const { imagePath, product, color, talle, colorstock, tallestock, price } = req.body;
+  const { name, title, image, imagedos, imagetres, description, price, filtroprice, color, colorstock  } = req.body;
   const errors = [];
-  if (!imagePath) {
+  if (!image) {
     errors.push({text: 'Please Write a Title.'});
   }
-  if (!product) {
+  if (!title) {
     errors.push({text: 'Please Write a Description'});
   }
   if (!price) {
@@ -38,17 +36,111 @@ router.post('/produno/new-produno',  async (req, res) => {
   if (errors.length > 0) {
     res.render('notes/new-note', {
       errors,
-      imagePath,
-      product,
+      image,
+      title,
       price
     });
   } else {
-    const newNote = new Produno({ imagePath, product, color, talle, colorstock, tallestock, price });
+    const newNote = new Produno({ name, title, image, imagedos, imagetres, description, price, filtroprice, color, colorstock  });
     //newNote.user = req.user.id;
     await newNote.save();
     req.flash('success_msg', 'Note Added Successfully');
-    res.redirect('/produno/add');
+    res.redirect('/produnoback/:1');
   }
+});
+
+
+
+
+
+router.get('/produnoback/:page', async (req, res) => {
+
+
+  let perPage =12;
+  let page = req.params.page || 1;
+
+  Produno 
+  .find()// finding all documents
+  .sort({_id:-1})
+  .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+  .limit(perPage) // output just 9 items
+  .exec((err, produno) => {
+    Produno.countDocuments((err, count) => { // count to calculate the number of pages
+      if (err) return next(err);
+      res.render('produno/new-produno', {
+        produno,
+        current: page,
+        pages: Math.ceil(count / perPage)
+      });
+    });
+  });
+});
+
+
+
+
+
+
+
+
+router.get("/searchback", function(req, res){
+  var noMatch = null;
+  if(req.query.search) {
+      const regex = new RegExp(escape(req.query.search), 'gi');
+      // Get all campgrounds from DB
+      console.log(req.query.search)
+      Produno.find({title: regex}, function(err, produno){
+         if(err){
+             console.log(err);
+         } else {
+            if(produno.length < 1) {
+                noMatch = "No campgrounds match that query, please try again.";
+            }
+            res.render("produno/new-produno",{produno, noMatch: noMatch});
+         }
+      });
+
+  } else {
+      // Get all campgrounds from DB
+      Produno.find({}, function(err, produno){
+         if(err){
+             console.log(err);
+         } else {
+            res.render("produno/produno",{produno, noMatch: noMatch});
+         }
+      });
+  }
+});
+
+
+
+
+
+
+
+/////////////////////////////////////////front//////////////////////////////////////////////////
+
+router.get('/produnoindex/:page', async (req, res) => {
+
+
+  let perPage = 8;
+  let page = req.params.page || 1;
+
+  Produno 
+  .find({}) // finding all documents
+  .sort( {timestamp: -1})
+  .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+  .limit(perPage) // output just 9 items
+  .exec((err, produno) => {
+    Produno.countDocuments((err, count) => { // count to calculate the number of pages
+      if (err) return next(err);
+      res.render('produno/produno', {
+        produno,
+        current: page,
+        pages: Math.ceil(count / perPage)
+      });
+    });
+  });
 });
 
 
@@ -66,26 +158,195 @@ router.get('/produnoredirect/:id', async (req, res) => {
 
 
 
+router.get("/search", function(req, res){
+  var noMatch = null;
+  if(req.query.search) {
+      const regex = new RegExp(escape(req.query.search), 'gi');
+      // Get all campgrounds from DB
+      console.log(req.query.search)
+      Produno.find({title: regex}, function(err, produno){
+         if(err){
+             console.log(err);
+         } else {
+            if(produno.length < 1) {
+                noMatch = "No campgrounds match that query, please try again.";
+            }
+            res.render("produno/produno",{produno, noMatch: noMatch});
+         }
+      });
+
+  } else {
+      // Get all campgrounds from DB
+      Produno.find({}, function(err, produno){
+         if(err){
+             console.log(err);
+         } else {
+            res.render("produno/produno",{produno, noMatch: noMatch});
+         }
+      });
+  }
+});
+
+
+
+/////////////////////////////////filter/////////////////////////////////////////////
+
+
+
+
+router.post("/filtroprod", function(req, res){
+
+  let perPage = 8;
+  let page = req.params.page || 1;
+
+  var flrtName = req.body.filtroprod;
+
+  if(flrtName!='' ) {
+
+    var flterParameter={ $and:[{ name:flrtName},
+      {$and:[{},{}]}
+      ]
+       
+    }
+    }else{
+      var flterParameter={}
+  }
+  var produno = Produno.find(flterParameter);
+  produno
+  //.find( flterParameter) 
+  .sort({ _id: -1 })
+  .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+  .limit(perPage) // output just 9 items
+  .exec((err, data) => {
+    produno.countDocuments((err, count) => {  
+  //.exec(function(err,data){
+      if(err) throw err;
+      res.render("produno/produno",
+      {
+        produno: data, 
+        current: page,
+        pages: Math.ceil(count / perPage)
+      
+      });
+    });
+  });
+});
+
+
+
+
+
+
+
+
+router.post("/filtroprecio", function(req, res){
+
+  let perPage = 8;
+  let page = req.params.page || 1;
+
+  var flrtName = req.body.filtroprice;
+
+  if(flrtName!='' ) {
+
+    var flterParameter={ $and:[{ filtroprice:flrtName},
+      {$and:[{},{}]}
+      ]
+       
+    }
+    }else{
+      var flterParameter={}
+  }
+  var produno = Produno.find(flterParameter);
+  produno
+  //.find( flterParameter) 
+  .sort({ _id: -1 })
+  .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+  .limit(perPage) // output just 9 items
+  .exec((err, data) => {
+    produno.countDocuments((err, count) => {  
+  //.exec(function(err,data){
+      if(err) throw err;
+      res.render("produno/produno",
+      {
+        produno: data, 
+        current: page,
+        pages: Math.ceil(count / perPage)
+      
+      });
+    });
+  });
+});
+
+
+
+
+
+
+router.post("/filtrocolor", function(req, res){
+
+  let perPage = 8;
+  let page = req.params.page || 1;
+
+  var flrtName = req.body.filtrocolor;
+
+  if(flrtName!='' ) {
+
+    var flterParameter={ $and:[{ color:flrtName},
+      {$and:[{},{}]}
+      ]
+       
+    }
+    }else{
+      var flterParameter={}
+  }
+  var produno = Produno.find(flterParameter);
+  produno
+  //.find( flterParameter) 
+  .sort({ _id: -1 })
+  .skip((perPage * page) - perPage) // in the first page the value of the skip is 0
+  .limit(perPage) // output just 9 items
+  .exec((err, data) => {
+    produno.countDocuments((err, count) => {  
+  //.exec(function(err,data){
+      if(err) throw err;
+      res.render("produno/produno",
+      {
+        produno: data, 
+        current: page,
+        pages: Math.ceil(count / perPage)
+      
+      });
+    });
+  });
+});
+
+
+
+
+
+
+
+
+
+
 
 
 
 // New product
-router.get('/produno/add',  async (req, res) => {
-  const produno = await Produno.find();
-  res.render('produno/new-produno',  { produno });
-});
-
-
-router.get('/produnobackend/:id', async (req, res) => {
-  const { id } = req.params;
-  const produno = await Produno.findById(id);
-   res.render('produno/produnobackend', {produno});
-});
+//router.get('/produno/add',  async (req, res) => {
+ // const produno = await Produno.find();
+  //res.render('produno/new-produno',  { produno });
+//});
 
 
 
 
-// talle y color
+
+
+
+
+
+/////////////////////////////crud//////////////////////////////7
 router.get('/produno/tallecolor/:id',  async (req, res) => {
   const produno = await Produno.findById(req.params.id);
   res.render('produno/tallecolor-produno', { produno });
@@ -112,7 +373,7 @@ router.get('/produno/edit/:id',  async (req, res) => {
 router.post('/produno/edit/:id',  async (req, res) => {
   const { id } = req.params;
   await Produno.updateOne({_id: id}, req.body);
-  res.redirect('/produnobackend/' + id);
+  res.redirect('/produnoback/:1');
 });
 
 
@@ -122,13 +383,17 @@ router.post('/produno/edit/:id',  async (req, res) => {
 router.get('/produno/delete/:id', async (req, res) => {
   const { id } = req.params;
     await Produno.deleteOne({_id: id});
-  res.redirect('/produno/add');
+  res.redirect('/produnoback/:1');
 });
 
 
 
 
 
+
+
+
+//////////////////////////////cart////////////////////////////////////7
 
 router.get('/addtocardproduno/:id', function(req, res, next){
   var productId = req.params.id;
@@ -164,10 +429,28 @@ router.get('/remove/:id', function(req, res, next){
   res.redirect('/shopcart');
 });
 
+router.get('/sumar/:id', function(req, res, next){
+  var productId = req.params.id;
+  var cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  cart.sumar(productId);
+  req.session.cart = cart;
+  res.redirect('/shopcart');
+});
+
+router.get('/', function (req, res, next){
+  if(!req.session.cart){
+    return res.render('cart/shopcart', {products:null})
+  }
+  var cart = new Cart(req.session.cart);
+  res.render('/', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+});
+
+
 
 router.get('/shopcart', function (req, res, next){
   if(!req.session.cart){
-    return res.render('/', {products:null})
+    return res.render('cart/shopcart', {products:null})
   }
   var cart = new Cart(req.session.cart);
   res.render('cart/shopcart', {products: cart.generateArray(), totalPrice: cart.totalPrice})
@@ -175,13 +458,71 @@ router.get('/shopcart', function (req, res, next){
 
 
 
-router.get('/checkout',isAuthenticated, function (req, res, next){
-  
+//router.get('/checkout',isAuthenticated, function (req, res, next){
+  router.get('/checkout', function (req, res, next){
   var cart = new Cart(req.session.cart);
-  res.render('cart/checkout', {total: cart.totalPrice})
+  res.render('cart/checkout', {products: cart.generateArray(), total: cart.totalPrice})
 });
 
-router.post('/checkout',  async (req, res) => {
+
+
+//router.post('/checkout', isAuthenticated, async (req, res, next)=>{  
+
+
+
+router.get('/checkout', function (req, res, next){
+  var cart = new Cart(req.session.cart);
+  res.render('cart/checkout', {products: cart.generateArray(), total: cart.totalPrice})
+});
+
+
+
+router.get('/prepagar', function (req, res, next){
+  if(!req.session.cart){
+    return res.render('/', {products:null})
+  }
+  var cart = new Cart(req.session.cart);
+  res.render('cart/prepagar', {products: cart.generateArray(), total: cart.totalPrice})
+});
+
+
+
+
+
+
+router.post('/confirmacion', isAuthenticated, async (req, res, next)=>{
+  if(!req.session.cart){
+    return res.render('/', {products:null})
+  }
+  const cart = new Cart(req.session.cart);
+
+  const order = new Order({
+    user: req.user,
+    cart: cart,
+    //address: req.body.address,
+    name: req.user.name,
+    direccion: req.user.direccion,
+    telefono: req.user.telefono
+    //timestamp:req.body.timestamp
+
+  });
+  console.log(order)
+  await order.save();
+  req.flash('success_msg', 'Note Added Successfully');
+  res.redirect('/prepagar');
+  
+})
+
+
+router.get('/prepagar', function (req, res, next){
+  var cart = new Cart(req.session.cart);
+  res.render('cart/prepagar', {products: cart.generateArray(), total: cart.totalPrice})
+});
+
+
+
+
+router.post('/checkout',isAuthenticated,  async (req, res) => {
 
   if(!req.session.cart){
     return res.render('/', {products:null})
@@ -193,6 +534,8 @@ router.post('/checkout',  async (req, res) => {
      // access_token: process.env.ACCESS_TOKEN
      access_token: 'TEST-1727718622428421-041715-2360deef34519752e5bd5f1fca94cdf1-344589484',
      publicKey: 'TEST-662a163b-afb0-4994-9aea-6be1cca2decd'
+   // access_token: 'APP_USR-1727718622428421-041715-07777da5a8f8451aba826d2727adeadd-344589484',
+     //publicKey: 'APP_USR-9abfa6a9-7a19-45c9-9d13-15edf5baf8f7'
   
   
     });
@@ -207,7 +550,8 @@ router.post('/checkout',  async (req, res) => {
         }
       ]
     };
-  
+
+   
     mercadopago.preferences
       .create(preference)
       .then(function(response) {

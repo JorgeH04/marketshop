@@ -3,33 +3,50 @@
 
 
 <div class="col-md-4 mx-auto">
-  <div class="card text-center">
-    <div class="card-header">
-      <h3>Agregue un nuevo producto</h3>
-    </div>
+    <div class="card text-center">
+        <form action="/searchback" method="GET">
+          <div class="form-group" >
+              <div class="input-group">
+                  <input type="text"  name="search" class="form-control border-dark" placeholder="Buscar productos" required>
+                  <div class="input-group-append">
+                      <button class="btn btn-outline-dark"><i class="fas fa-search"></i></button>
+                  </div>
+              </div>
+          </div>
+      </form>
+      <div class="card-header mt-5">
+        <h3>Agregue un nuevo producto</h3>
+      </div>
     <div class="card-body">
       <form action="/proddos/new-proddos" method="POST">
+
+
+
+
         <div class="form-group">
-          <input type="text" name="imagePath" class="form-control" placeholder="image" autofocus/>
+          <input type="text" name="name" class="form-control" placeholder="name" autofocus/>
         </div>
        <div class="form-group">
-          <input type="text" name="product" class="form-control" placeholder="product" autofocus/>
+          <input type="text" name="title" class="form-control" placeholder="title" autofocus/>
         </div>
         <div class="form-group">
-            <input type="text" name="talle" class="form-control" placeholder="talle" autofocus/>
+            <input type="text" name="image" class="form-control" placeholder="imagen 1" autofocus/>
+          </div>
+          <div class="form-group">
+            <input type="text" name="imagedos" class="form-control" placeholder="imagen 2" autofocus/>
+          </div>
+          <div class="form-group">
+            <input type="text" name="imagetres" class="form-control" placeholder="imagen 3" autofocus/>
           </div>
                  <div class="form-group">
-            <input type="text" name="color" class="form-control" placeholder="color" autofocus/>
+            <input type="text" name="description" class="form-control" placeholder="descripcion" autofocus/>
           </div>
                  <div class="form-group">
-            <input type="text" name="tallestock" class="form-control" placeholder="tallestock" autofocus/>
+            <input type="text" name="price" class="form-control" placeholder="precio" autofocus/>
           </div>
-                 <div class="form-group">
-            <input type="text" name="colorstock" class="form-control" placeholder="colorstock" autofocus/>
-          </div>
-        <div class="form-group">
-          <input type="number" name="price" class="form-control" placeholder="price" autofocus/>
-        </div>
+
+
+
         <div class="form-group">
           <button class="btn btn-primary btn-block" type="submit">
             Save
@@ -51,13 +68,16 @@
          <img class="card-img-top img-fluid" alt="img1" src="<%= proddo.imagePath %>">
           </a>
           <div class="card-body">
-        <div class="card-heading"><%= proddo.product %></div>
+        <div class="card-heading"><%= proddo.title %></div>
         <h4> $<%= proddo.price %>  </h4>
         <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit neque, mollitia dolorem. </p>
         <a class="btn btn-pink text-light"><i class="fa fa-cart-plus" aria-hidden="true"></i> Add To Cart</a> </div>
         <a class="btn btn-danger" href="/proddos/delete/<%= proddo.id %>">
           Eliminar
-      </a>
+        </a>
+        <a class="btn btn-primary" href="/proddos/edit/<%= proddo.id %>">
+          Editar
+        </a>
         </div>
   </div>
   <% }) %>

@@ -8,7 +8,7 @@ const router = express.Router();
 // Models
 const Prodcinco = require('../models/prodcinco');
 const Cart = require('../models/cart');
-//const Order = require('../models/Order');
+//const Order = require('../models/order');
 
 // Helpers
 const { isAuthenticated } = require('../helpers/auth');
@@ -27,12 +27,12 @@ router.get('/prodcincoindex', async (req, res) => {
 
 
 router.post('/prodcinco/new-prodcinco',  async (req, res) => {
-  const { imagePath, product, color, talle, colorstock, tallestock, price } = req.body;
+  const { name, title, image, imagedos, imagetres, description, price } = req.body;
   const errors = [];
-  if (!imagePath) {
+  if (!image) {
     errors.push({text: 'Please Write a Title.'});
   }
-  if (!product) {
+  if (!title) {
     errors.push({text: 'Please Write a Description'});
   }
   if (!price) {
@@ -41,18 +41,19 @@ router.post('/prodcinco/new-prodcinco',  async (req, res) => {
   if (errors.length > 0) {
     res.render('notes/new-note', {
       errors,
-      imagePath,
-      product,
+      image,
+      title,
       price
     });
   } else {
-    const newNote = new Prodcinco({ imagePath, product, color, talle, colorstock, tallestock, price });
+    const newNote = new Prodcinco({ name, title, image, imagedos, imagetres, description, price });
     //newNote.user = req.user.id;
     await newNote.save();
     req.flash('success_msg', 'Note Added Successfully');
     res.redirect('/prodcinco/add');
   }
 });
+
 
 
 
@@ -148,79 +149,6 @@ router.get('/addtocardprodcinco/:id', function(req, res, next){
   });
 });
 
-router.get('/reduce/:id', function(req, res, next){
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
 
-  cart.reduceByOne(productId);
-  req.session.cart = cart;
-  res.redirect('/shopcart');
-});
-
-router.get('/remove/:id', function(req, res, next){
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-
-  cart.removeItem(productId);
-  req.session.cart = cart;
-  res.redirect('/shopcart');
-});
-
-
-router.get('/shopcart', function (req, res, next){
-  if(!req.session.cart){
-    return res.render('/', {products:null})
-  }
-  var cart = new Cart(req.session.cart);
-  res.render('cart/shopcart', {products: cart.generateArray(), totalPrice: cart.totalPrice})
-});
-
-
-router.post('/checkoutstripe', async (req, res) => {
-
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-
-  const customer = await stripe.customers.create({
-    email: req.body.stripeEmail,
-    source: req.body.stripeToken
-    });
-  const charge = await stripe.charges.create({
-    amount: cart.totalPrice * 100,
-    description: 'Video Editing Software',
-    currency: 'usd',
-    customer: customer.id
-     });
-// Save this charge in your database
-console.log(charge.id);
-// Finally Show a Success View
-res.render('checkout');
-});
-
-router.get('/checkout',isAuthenticated, function (req, res, next){
-  
-  var cart = new Cart(req.session.cart);
-  res.render('cart/checkout', {total: cart.totalPrice})
-});
-
-
-router.post('/checkout', isAuthenticated, async (req, res, next)=>{
-  if(!req.session.cart){
-    return res.render('/', {products:null})
-  }
-  const cart = new Cart(req.session.cart);
-
-  const order = new Order({
-    user: req.user,
-    cart: cart,
-    address: req.body.address,
-    name: req.body.name
-
-  });
-  await order.save();
-  req.flash('success_msg', 'Note Added Successfully');
-  res.redirect('/shopcart');
-  
-})
 
 module.exports = router;
