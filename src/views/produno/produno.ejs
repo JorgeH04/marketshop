@@ -12,7 +12,7 @@
                     <div class="sidebar-single">
                         <div class="sidebar-title">
                             <a data-toggle="collapse"  class="pointer" aria-expanded="true" data-target="#brandCollapse" aria-controls="#brandCollapse">
-                                <span class="pull-left title-sidebar">Filter By Brand</span>
+                                <span class="pull-left title-sidebar">Filtrar por categoría</span>
 
                                 <span class="pull-right"><i class="fa fa-plus"></i></span>
                                 <span class="pull-right"><i class="fa fa-minus"></i></span>
@@ -27,21 +27,12 @@
 
                             <form action="/filtroprod" method="POST" accept-charset="utf-8">
 
-                                <input type="checkbox" id="c1" value="cuadro"   name="filtroprod" />
-                                <label for="c1"><span></span>T-Shirt</label><br />
+                                <input type="checkbox" id="c1" value="lapicera"   name="filtroprod" />
+                                <label for="c1"><span></span>Lapiceras</label><br />
 
-                                <input type="checkbox" id="c2" value="editor"   name="filtroprod" />
-                                <label for="c2"><span></span>Pant</label><br />
-
-                                <input type="checkbox" id="c3" value="jor"   name="filtroprod" />
-                                <label for="c3"><span></span>Genji</label><br />
-
-                                <input type="checkbox" id="c4" value="jor"  name="filtroprod" />
-                                <label for="c4"><span></span>Full Shirt</label><br />
-
-                                <input type="checkbox" id="c5" value="cuadro"  name="filtroprod" />
-                                <label for="c5"><span></span>Half Shirt</label><br />
-
+                                <input type="checkbox" id="c2" value="birome"   name="filtroprod" />
+                                <label for="c2"><span></span>Biromes</label><br />
+                             
                                 
                                 <button class="btn btn-red pull-right btn-sm">
                                     Buscar
@@ -56,7 +47,7 @@
                     <div class="sidebar-single">
                         <div class="sidebar-title">
                             <a data-toggle="collapse" class="pointer" aria-expanded="true" data-target="#brandPriceCollapse" aria-controls="#brandPriceCollapse">
-                                <span class="pull-left title-sidebar">Filter By Price</span>
+                                <span class="pull-left title-sidebar">Filtrar por precio</span>
 
                                 <span class="pull-right"><i class="fa fa-plus"></i></span>
                                 <span class="pull-right"><i class="fa fa-minus"></i></span>
@@ -71,13 +62,13 @@
                             <form action="/filtroprecio" method="POST" accept-charset="utf-8">
 
                                 <input type="checkbox" id="price1" value="0.100"  name="filtroprice"/>
-                                <label for="price1"><span></span>0-100TK</label><br />
+                                <label for="price1"><span></span>$ 0-100</label><br />
 
                                 <input type="checkbox" id="price2" value="100.500"  name="filtroprice" />
-                                <label for="price2"><span></span>100-500TK</label><br />
+                                <label for="price2"><span></span>$b100-500</label><br />
 
                                 <input type="checkbox" id="price3" value="500.1000"  name="filtroprice" />
-                                <label for="price3"><span></span>500-1000TK</label><br />
+                                <label for="price3"><span></span>$ 500-1000</label><br />
 
                              
 
@@ -93,7 +84,7 @@
                     <div class="sidebar-single">
                         <div class="sidebar-title">
                             <a data-toggle="collapse" class="pointer" aria-expanded="true" data-target="#productColorCollapse" aria-controls="#productColorCollapse">
-                                <span class="pull-left title-sidebar">Filter By Color</span>
+                                <span class="pull-left title-sidebar">Filtrar por color</span>
 
                                 <span class="pull-right"><i class="fa fa-plus"></i></span>
                                 <span class="pull-right"><i class="fa fa-minus"></i></span>
@@ -107,19 +98,20 @@
                             <form action="/filtrocolor" method="POST" accept-charset="utf-8">
 
                                 <input type="checkbox" id="color0" value="blanco"  name="filtrocolor" />
-                                <label for="color0" style="color:#9c9"><span></span>blanco</label><br />
+                                <label for="color0" style="color:color:#000000"><span></span>Negro</label><br />
+
+                                
+                                <input type="checkbox" id="color2" value="azul"  name="filtrocolor" />
+                                <label for="color2" style="color:#00f"><span></span>Azul</label><br />
 
                                 <input type="checkbox" id="color1" value="rojo"  name="filtrocolor"  />
                                 <label for="color1" style="color:#f00"><span></span>Rojo</label><br />
 
-                                <input type="checkbox" id="color2" value="azul"  name="filtrocolor" />
-                                <label for="color2" style="color:#00f"><span></span>Azul</label><br />
 
                                 <input type="checkbox" id="color3" value="verde"  name="filtrocolor"  />
                                 <label for="color3" style="color:#008000"><span></span>Verde</label><br />
 
-                                <input type="checkbox" id="color4" value="rosa"  name="filtrocolor"  />
-                                <label for="color4" style="color:#ffc0cb"><span></span>Rosa</label><br />
+
 
                             
 
@@ -152,27 +144,18 @@
             <div class="col-sm-10 col-md-10 col-lg-10">
                 <ol class="breadcrumb breadcrumb1">
                     <li><a href="index.html">Home</a></li>
-                    <li class="active">Products</li>
+                    <li class="active">Productos</li>
                 </ol>
                 <div class="product-top">
-                    <h4>All Products</h4>
+                    <h4>Todos los productos</h4>
                     <ul> 
-                        <li class="dropdown head-dpdn">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sort By<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Most Popular</a></li> 
-                                <li><a href="#">New In</a></li> 
-                                <li><a href="#">Lowest price</a></li> 
-                                <li><a href="#">Highest price</a></li>
-                                <li><a href="#">Best Rating</a></li>
-                            </ul> 
-                        </li>
+                        
                     </ul> 
                     <div class="clearfix"> </div>
                 </div>
                 <div class="all-products">
                     <div class="">
-                        <h2 class="title-div wow slideInRight" data-wow-duration="1s" data-wow-delay="0s" data-wow-offset="10">Our Latest Products available</h2>
+                        <h2 class="title-div wow slideInRight" data-wow-duration="1s" data-wow-delay="0s" data-wow-offset="10">Nuestro últimos productos disponibles</h2>
                         <div class="products">
                             <div class="row">
 
@@ -185,7 +168,7 @@
                                             </a> 
 
                                             <div class="product-price">
-                                                <a href="product_single.html">DSLR Camera</a><br />
+                                                <a href="product_single.html"><%= produn.title %></a><br />
                                                 <span class="prev-price">
                                                     <del></del>
                                                 </span>
@@ -196,7 +179,7 @@
 
                                             <a href="/addtocardproduno/<%= produn.id %>"  class="btn btn-cart text-center add-to-cart pull-right">
                                                 <i class="fa fa-cart-plus"></i>
-                                                Add to cart
+                                                Al carro
                                             </a>
                                             <div class="clear"></div>
                                         </div>
@@ -212,75 +195,6 @@
 
 
 
-                                <div class="col-12">
-                                        <div class="row">
-                                              <!-- pagination -->
-                                              <% if(pages > 0) { %> <!-- show pagination if there is pages -->
-                                                <nav  class="mx-auto" style="margin-bottom: 50px">
-                                                  <ul class="pagination">
-                                                    <!-- FIRST ITEM -->
-                                                    <% if(current == 1) { %>
-                                                      <li class="page-item disabled">
-                                                        <a class="page-link" href="#">First</a>
-                                                      </li>
-                                                    <% } else { %>
-                                                      <li class="page-item">
-                                                        <a class="page-link" href="/produnoindex/1">First</a>
-                                                      </li>
-                                                    <% } %>
-                                                    <!-- ITEMS  -->
-                                                    <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
-                                                    <% if(i !== 1) { %>
-                                                      <li class="page-item disabled">
-                                                        <a class="page-link" href="#">...</a>
-                                                      </li>
-                                                    <% } %>
-                                                    <% for(; i <= (Number(current) + 4) && i <= pages; i++) { %>
-                                                      <% if(i == current) { %>
-                                                        <li class="page-item active">
-                                                          <a class="page-link" href="<%= i %>">
-                                                            <%= i %>
-                                                          </a>
-                                                        </li>
-                                                      <% } else { %>
-                                                        <li class="page-item">
-                                                          <a class="page-link" href="/produnoindex/<%= i %>">
-                                                            <%= i %>
-                                                          </a>
-                                                        </li>
-                                                      <% } %>
-                                                      <% if (i == Number(current) + 4 && i < pages) { %>
-                                                         <li class="page-item disabled">
-                                                           <a class="page-link" href="#">...</a>
-                                                         </li>
-                                                      <% } %>
-                                                    <% } %>
-                                                    <!-- LAST ITEM -->
-                                                    <% if(current == pages) { %>
-                                                      <li class="page-item disabled">
-                                                        <a class="page-link" href="#">
-                                                          Last
-                                                        </a>
-                                                      </li>
-                                                    <% } else { %>
-                                                      <li class="page-item">
-                                                        <a class="page-link" href="/produnoindex/<%= pages %>">
-                                                          Last
-                                                        </a>
-                                                      </li>
-                                                    <% } %>
-                                                  </ul>
-                                                </nav>
-                                              <% } %>
-                                            </div>
-                                          </div>
-                                        </main>
-                                        <!-- Main Content -->
-                                      </div>
-
-
-
-
                             </div> <!-- End Latest products row-->
 
 
@@ -291,6 +205,78 @@
 
 
                         </div> <!-- End products div-->
+
+
+
+                        
+            <div class="col-md-12">
+                    <div class="row">
+                          <!-- pagination -->
+                          <% if(pages > 0) { %> <!-- show pagination if there is pages -->
+                            <nav  class="mx-auto" style="margin-bottom: 50px">
+                              <ul class="pagination">
+                                <!-- FIRST ITEM -->
+                                <% if(current == 1) { %>
+                                  <li class="page-item disabled">
+                                    <a class="page-link" href="#">First</a>
+                                  </li>
+                                <% } else { %>
+                                  <li class="page-item">
+                                    <a class="page-link" href="/produnoindex/1">First</a>
+                                  </li>
+                                <% } %>
+                                <!-- ITEMS  -->
+                                <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                                <% if(i !== 1) { %>
+                                  <li class="page-item disabled">
+                                    <a class="page-link" href="#">...</a>
+                                  </li>
+                                <% } %>
+                                <% for(; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                                  <% if(i == current) { %>
+                                    <li class="page-item active">
+                                      <a class="page-link" href="<%= i %>">
+                                        <%= i %>
+                                      </a>
+                                    </li>
+                                  <% } else { %>
+                                    <li class="page-item">
+                                      <a class="page-link" href="/produnoindex/<%= i %>">
+                                        <%= i %>
+                                      </a>
+                                    </li>
+                                  <% } %>
+                                  <% if (i == Number(current) + 4 && i < pages) { %>
+                                     <li class="page-item disabled">
+                                       <a class="page-link" href="#">...</a>
+                                     </li>
+                                  <% } %>
+                                <% } %>
+                                <!-- LAST ITEM -->
+                                <% if(current == pages) { %>
+                                  <li class="page-item disabled">
+                                    <a class="page-link" href="#">
+                                      Last
+                                    </a>
+                                  </li>
+                                <% } else { %>
+                                  <li class="page-item">
+                                    <a class="page-link" href="/produnoindex/<%= pages %>">
+                                      Last
+                                    </a>
+                                  </li>
+                                <% } %>
+                              </ul>
+                            </nav>
+                          <% } %>
+                        </div>
+                      </div>
+                    </main>
+                    <!-- Main Content -->
+                  </div>
+
+
+
                     </div> <!-- End container latest products-->
 
 
@@ -300,6 +286,14 @@
 
                 
             </div>
+
+
+
+
+
+
+
+
         </div>
 
 
