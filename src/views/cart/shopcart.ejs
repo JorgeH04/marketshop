@@ -6,15 +6,15 @@
 <div class="content-area">
     <div class="container">
         <div class="cart-page">
-            <h2>Cart</h2>
+            <h2>Carro</h2>
             <form action="checkout.html">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th width="50%">Item</th>
-                            <th width="10%">Quantity</th>
-                            <th width="20%">Unit Price</th>
-                            <th width="20%">Total Price</th>
+                            <th width="50%">Productos</th>
+                            <th width="10%">Cantidad</th>
+                            <th width="20%"></th>
+                            <th width="20%">Precio</th>
                         </tr>
                     </thead>
 
@@ -36,9 +36,18 @@
                                 </span>
                                 <div class="clearfix"></div>
                             </td>
-                            <td><input type="number" min="1" name="product_quantity_p1" value="2" class="form-control product_quantity_p1" /></td>
-                            <td>$<%= products[i].price %></td>
-                            <td><p class="total_ammount_p1">400$</p></td>
+
+                            
+                            <td>
+                                    <a href="/sumar/<%= products[i].item._id %>" class="btn btn-link text-danger"><i class="fas fa-chevron-up"></i></a>
+                                <%= products[i].qty %>
+                                <a href="/reduce/<%= products[i].item._id %>" class="btn btn-link text-danger"><i class="fas fa-chevron-down"></i></a></div>
+
+                            </td>
+
+
+                            <td></td>
+                            <td><p class="total_ammount_p1">$<%= products[i].price %></p></td>
                         </tr>    
                         <% } %> 
                         

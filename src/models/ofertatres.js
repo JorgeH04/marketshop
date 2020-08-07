@@ -8,6 +8,7 @@ const NoteSchema = new Schema({
   imagedos: String,
   imagetres: String,
   description: String,
+  oldprice: Number,
   price: Number,
   amount: Number,
   status: {

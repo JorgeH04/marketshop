@@ -16,7 +16,7 @@ const { isAuthenticated } = require('../helpers/auth');
 
 
 router.post('/ofertatres/new-ofertatres',  async (req, res) => {
-  const { name, title, image, imagedos, imagetres, description, price } = req.body;
+  const { name, title, image, imagedos, imagetres, description, price, oldprice  } = req.body;
   const errors = [];
   if (!image) {
     errors.push({text: 'Please Write a Title.'});
@@ -35,7 +35,7 @@ router.post('/ofertatres/new-ofertatres',  async (req, res) => {
       price
     });
   } else {
-    const newNote = new Ofertatres({ name, title, image, imagedos, imagetres, description, price });
+    const newNote = new Ofertatres({ name, title, image, imagedos, imagetres, description, price, oldprice  });
     //newNote.user = req.user.id;
     await newNote.save();
     req.flash('success_msg', 'Note Added Successfully');
@@ -80,24 +80,15 @@ router.get('/ofertatresbackend/:id', async (req, res) => {
 
 
 
+////////////////////////////////////////crud////////////////////////////////////////////////7
 
-
-// talle y color
-router.get('/ofertatres/tallecolor/:id',  async (req, res) => {
-  const ofertatres = await Ofertatres.findById(req.params.id);
-  res.render('ofertatres/tallecolor-ofertatres', { ofertatres });
-});
-
-router.post('/ofertatres/tallecolor/:id',  async (req, res) => {
-  const { id } = req.params;
-  await Ofertatres.updateOne({_id: id}, req.body);
-  res.redirect('/ofertatresredirect/' + id);
-});
 
 
 
 
 //editar
+
+
 router.get('/ofertatres/edit/:id',  async (req, res) => {
   const ofertatres = await Ofertatres.findById(req.params.id);
   res.render('ofertados/edit-ofertados', { ofertados });
@@ -106,9 +97,8 @@ router.get('/ofertatres/edit/:id',  async (req, res) => {
 router.post('/ofertatres/edit/:id',  async (req, res) => {
   const { id } = req.params;
   await Ofertatres.updateOne({_id: id}, req.body);
-  res.redirect('/ofertatresbackend/' + id);
+  res.redirect('/ofertatres/add');
 });
-
 
 
 // Delete 
@@ -121,6 +111,7 @@ router.get('/ofertatres/delete/:id', async (req, res) => {
 
 
 
+////////////////////////////////////////cart////////////////////////////////////////////////7
 
 
 

@@ -16,7 +16,7 @@ const { isAuthenticated } = require('../helpers/auth');
 
 
 router.post('/ofertados/new-ofertados',  async (req, res) => {
-  const { name, title, image, imagedos, imagetres, description, price } = req.body;
+  const { name, title, image, imagedos, imagetres, description, price, oldprice  } = req.body;
   const errors = [];
   if (!image) {
     errors.push({text: 'Please Write a Title.'});
@@ -35,7 +35,7 @@ router.post('/ofertados/new-ofertados',  async (req, res) => {
       price
     });
   } else {
-    const newNote = new Ofertados({ name, title, image, imagedos, imagetres, description, price });
+    const newNote = new Ofertados({ name, title, image, imagedos, imagetres, description, price, oldprice  });
     //newNote.user = req.user.id;
     await newNote.save();
     req.flash('success_msg', 'Note Added Successfully');
@@ -85,23 +85,7 @@ router.get('/ofertadosbackend/:id', async (req, res) => {
 
 
 
-// talle y color
-router.get('/ofertados/tallecolor/:id',  async (req, res) => {
-  const ofertados = await Ofertados.findById(req.params.id);
-  res.render('ofertados/tallecolor-ofertados', { ofertados });
-});
-
-router.post('/ofertados/tallecolor/:id',  async (req, res) => {
-  const { id } = req.params;
-  await Ofertados.updateOne({_id: id}, req.body);
-
-  res.redirect('/ofertadosredirect/' + id);
-});
-
-
-
-
-//editar
+////////////////////////////////////////crud////////////////////////////////////////////////7
 
 
 router.get('/ofertados/edit/:id',  async (req, res) => {
@@ -112,8 +96,11 @@ router.get('/ofertados/edit/:id',  async (req, res) => {
 router.post('/ofertados/edit/:id',  async (req, res) => {
   const { id } = req.params;
   await Ofertados.updateOne({_id: id}, req.body);
-  res.redirect('/ofertaunobackend/' + id);
+  res.redirect('/ofertados/add');
 });
+
+
+
 
 
 // Delete 
@@ -126,6 +113,7 @@ router.get('/ofertados/delete/:id', async (req, res) => {
 
 
 
+////////////////////////////////////////cart////////////////////////////////////////////////7
 
 
 

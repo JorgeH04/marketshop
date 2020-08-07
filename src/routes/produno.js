@@ -22,7 +22,7 @@ const { isAuthenticated } = require('../helpers/auth');
 ////////////////////////////////////////back/////////////////////////////////////////////////////7
 
 router.post('/produno/new-produno',  async (req, res) => {
-  const { name, title, image, imagedos, imagetres, description, price, filtroprice, color, colorstock  } = req.body;
+  const { name, title, image, imagedos, imagetres, description, oldprice, price, filtroprice, color, colorstock  } = req.body;
   const errors = [];
   if (!image) {
     errors.push({text: 'Please Write a Title.'});
@@ -41,7 +41,7 @@ router.post('/produno/new-produno',  async (req, res) => {
       price
     });
   } else {
-    const newNote = new Produno({ name, title, image, imagedos, imagetres, description, price, filtroprice, color, colorstock  });
+    const newNote = new Produno({ name, title, image, imagedos, imagetres, description, price, oldprice, filtroprice, color, colorstock  });
     //newNote.user = req.user.id;
     await newNote.save();
     req.flash('success_msg', 'Note Added Successfully');
@@ -347,17 +347,6 @@ router.post("/filtrocolor", function(req, res){
 
 
 /////////////////////////////crud//////////////////////////////7
-router.get('/produno/tallecolor/:id',  async (req, res) => {
-  const produno = await Produno.findById(req.params.id);
-  res.render('produno/tallecolor-produno', { produno });
-});
-
-router.post('/produno/tallecolor/:id',  async (req, res) => {
-  const { id } = req.params;
-  await Produno.updateOne({_id: id}, req.body);
-
-  res.redirect('/produnoredirect/' + id);
-});
 
 
 

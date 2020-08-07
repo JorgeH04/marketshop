@@ -17,7 +17,7 @@ const { isAuthenticated } = require('../helpers/auth');
 
 
 router.post('/ofertauno/new-ofertauno',  async (req, res) => {
-  const { name, title, image, imagedos, imagetres, description, price } = req.body;
+  const { name, title, image, imagedos, imagetres, description, price, oldprice } = req.body;
   const errors = [];
   if (!image) {
     errors.push({text: 'Please Write a Title.'});
@@ -36,7 +36,7 @@ router.post('/ofertauno/new-ofertauno',  async (req, res) => {
       price
     });
   } else {
-    const newNote = new Ofertauno({ name, title, image, imagedos, imagetres, description, price });
+    const newNote = new Ofertauno({ name, title, image, imagedos, imagetres, description, price, oldprice });
     //newNote.user = req.user.id;
     await newNote.save();
     req.flash('success_msg', 'Note Added Successfully');
@@ -70,28 +70,11 @@ router.get('/ofertauno/add',  async (req, res) => {
 });
 
 
-router.get('/ofertaunobackend/:id', async (req, res) => {
-  const { id } = req.params;
-  const ofertauno = await Ofertauno.findById(id);
-   res.render('ofertauno/ofertaunobackredirect', {ofertauno});
-});
 
 
 
 
-// talle y color
-router.get('/ofertauno/tallecolor/:id',  async (req, res) => {
-  const ofertauno = await Ofertauno.findById(req.params.id);
-  res.render('ofertauno/tallecolor-ofertauno', { ofertauno });
-});
-
-router.post('/ofertauno/tallecolor/:id',  async (req, res) => {
-  const { id } = req.params;
-  await Ofertauno.updateOne({_id: id}, req.body);
-
-  res.redirect('/ofertaunoredirect/' + id);
-});
-
+////////////////////////////////////////crud////////////////////////////////////////////////7
 
 
 
@@ -106,22 +89,22 @@ router.get('/ofertauno/edit/:id',  async (req, res) => {
 router.post('/ofertauno/edit/:id',  async (req, res) => {
   const { id } = req.params;
   await Ofertauno.updateOne({_id: id}, req.body);
-  res.redirect('/ofertaunobackend/' + id);
+  res.redirect('/ofertauno/add');
 });
-
 
 
 
 // Delete 
-router.get('/notes/delete/:id', async (req, res) => {
+router.get('/ofertauno/delete/:id', async (req, res) => {
   const { id } = req.params;
     await Ofertauno.deleteOne({_id: id});
-  res.redirect('/ofertaunobackend');
+  res.redirect('/ofertauno/add');
 });
 
 
 
 
+////////////////////////////////////////cart////////////////////////////////////////////////7
 
 
 router.get('/addtocardofertauno/:id', function(req, res, next){
